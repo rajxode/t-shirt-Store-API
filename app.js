@@ -26,5 +26,6 @@ app.use(fileUpload());
 
 app.use(morgan('tiny'));
 
+app.use('/api/v1',require('./routes/home'));
 
 module.exports = app;
