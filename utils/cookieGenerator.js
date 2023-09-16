@@ -13,6 +13,9 @@ const cookieGenerator = (user,res) => {
         httpOnly: true,
     }
 
+    // remove password from variable
+    user.password = undefined;
+    
     // return response { token , user }
     res.status(200).cookie('token', token, options).json({
         success: true,

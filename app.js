@@ -22,10 +22,14 @@ app.use(express.urlencoded({
 }));
 
 app.use(cookieParser());
-app.use(fileUpload());
+app.use(fileUpload({
+        useTempFiles: true,
+        tempFileDir:"/tmp/",
+    })
+);
 
 app.use(morgan('tiny'));
-
+ 
 app.use('/api/v1',require('./routes/home'));
 
 module.exports = app;
