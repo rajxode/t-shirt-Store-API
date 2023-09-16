@@ -1,6 +1,7 @@
 
 const mongoose = require('mongoose');
 const validator = require('validator');
+const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 
 // creating user schema
@@ -65,14 +66,19 @@ const userSchema = new mongoose.Schema({
 
 
 
+// to create bcrypt hash of password before saving in DB
 userSchema.pre('save', async function(next){
+    // if password is not modified return 
     if(!this.isModified('password')){
         return next();
-    } // Adding this statement solved the problem!!
+    }
 
+    // create hash for password
     this.password = await bcrypt.hash(this.password,10);
 });
 
+
+// to check whether the password entered and password in DB match 
 userSchema.methods.isPasswordMatch = async function(enteredPassword){
     return bcrypt.compare(enteredPassword,this.password);
 }
@@ -88,6 +94,28 @@ userSchema.methods.getCreateJWTToken = function(){
         }
     );
 }
+
+// to create a random string(token) for reset password
+// we store the hash of token in database and give user the simple crypto string 
+// so when we use the resetPasswordToken in backend we have to again perform createHash method
+userSchema.methods.resetPasswordToken = function(){
+    
+    // generate a long and random string
+    const forgotToken = crypto.randomBytes(20).toString("hex");
+
+    // creating hash from the random string token and store it inside the database
+    this.forgotPasswordToken = crypto
+    .createHash("sha256")
+    .update(forgotToken)
+    .digest("hex");
+
+    // expiry time of token
+    this.forgotPasswordExpiry = Date.now() + 20 * 60 * 1000;
+
+    // return the string token ( not the hash token )
+    return forgotToken;
+};
+
 
 // exporting the schema's model
 module.exports = mongoose.model('User',userSchema);
