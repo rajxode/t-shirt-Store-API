@@ -1,6 +1,7 @@
 
 const mongoose = require('mongoose');
 const validator = require('validator');
+const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 
@@ -10,14 +11,14 @@ const userSchema = new mongoose.Schema({
     name:{
         type:String,
         // required true, if user's not give name then show message
-        require:[true, 'Please enter your name'],
+        required:[true, 'Please enter your name'],
         // max length of name
         maxlength:[40, 'Name cannot be greater than 40 Characters']
     },
     // email address of user
     email:{
-        tyep:String,
-        require:[true,'Please enter your email'],
+        type:String,
+        required:[true, 'Please enter your email'],
         // make email unique for each user
         unique:true,
         // validate whether email entered is in correct format
@@ -43,12 +44,12 @@ const userSchema = new mongoose.Schema({
         // photo id in cloudinary
         id:{
             type:String,
-            require:true
+            required:true
         },
         // url from cloudinary
         secure_url:{
             type:String,
-            require:true,
+            required:true,
         }
         
     },
@@ -84,7 +85,7 @@ userSchema.methods.isPasswordMatch = async function(enteredPassword){
 }
 
 
-userSchema.methods.getCreateJWTToken = function(){
+userSchema.methods.getJWTToken = function(){
     // generating a new token for the user
     return jwt.sign(
         {id: this._id},
@@ -104,13 +105,13 @@ userSchema.methods.resetPasswordToken = function(){
     const forgotToken = crypto.randomBytes(20).toString("hex");
 
     // creating hash from the random string token and store it inside the database
-    this.forgotPasswordToken = crypto
+    this.forgetPasswordToken = crypto
     .createHash("sha256")
     .update(forgotToken)
     .digest("hex");
 
-    // expiry time of token
-    this.forgotPasswordExpiry = Date.now() + 20 * 60 * 1000;
+    // expiry time of token 20 minutes
+    this.forgetPasswordExpiry = Date.now() + 20 * 60 * 1000;
 
     // return the string token ( not the hash token )
     return forgotToken;
