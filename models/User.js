@@ -1,8 +1,13 @@
 
+// mongoose
 const mongoose = require('mongoose');
+// validate the data
 const validator = require('validator');
+// creating web token
 const jwt = require('jsonwebtoken');
+// generate a random string
 const crypto = require('crypto');
+// encrypt password
 const bcrypt = require('bcryptjs');
 
 // creating user schema
