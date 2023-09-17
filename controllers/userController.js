@@ -102,3 +102,19 @@ module.exports.login = BigPromise(async (req,res,next) => {
     // if the user's is validated then create a token for him
     cookieGenerator(user,res);
 })
+
+
+// to logout user
+module.exports.logout = BigPromise(async (req,res,next) => {
+    res.cookie('token',null,{
+        expires: new Date(
+            Date.now()
+        ),
+        httpOnly: true,
+    });
+
+    res.status(200).json({
+        success:true,
+        message:"User logout successfully"
+    })
+})

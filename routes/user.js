@@ -14,6 +14,8 @@ const userController = require('../controllers/userController');
 router.route('/signup').post(userController.signup);
 // login route
 router.route('/login').post(userController.login);
+// logout route
+router.route('/logout').get(userController.logout);
 
 // export route
 module.exports = router;
