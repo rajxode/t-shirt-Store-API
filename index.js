@@ -1,12 +1,12 @@
 
+// importing app from app.js
+const app = require('./app');
+
 // for environment variables
 require('dotenv').config();
 
 // database
 const connectWithDb = require('./config/mongoose');
-
-// importing app from app.js
-const app = require('./app');
 
 // cloudinary for uploading image
 const cloudinary = require('cloudinary');
