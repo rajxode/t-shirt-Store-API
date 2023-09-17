@@ -66,3 +66,39 @@ module.exports.signup = BigPromise( async (req,res,next) => {
     cookieGenerator(user,res);
     
 });
+
+
+// for logging in the user
+module.exports.login = BigPromise(async (req,res,next) => {
+    
+    // get the entered values of email and password
+    const {email,password} = req.body;
+
+    // if user doesn't provide all the values
+    if(!email || !password){
+        return next(new CustomError('Please provide values for email and password', 400));
+    }
+
+    // to get the user from database by his/her email id
+    // (.select) = to get value of password also from database, which is initially hide for access inside the schema
+    const user = await User.findOne({email}).select('+password');
+
+
+    // if user doesn't found inside the database
+    if(!user){
+        return next(new CustomError('Email address does not exist', 400));
+    }
+
+
+    // match the user's entered password  with password saved inside the database
+    const isValidUser = await user.isPasswordMatch(password);
+
+
+    // if both password doesn't match
+    if(!isValidUser){
+        return next(new CustomError('Email or password is incorrect', 400));      
+    }
+
+    // if the user's is validated then create a token for him
+    cookieGenerator(user,res);
+})
