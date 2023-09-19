@@ -17,6 +17,7 @@ const cloudinary = require('cloudinary').v2;
 // for creating custom error message
 const CustomError = require('../utils/customError');
 const mailHelper = require('../utils/emailHelper');
+const crypto = require('crypto');
 
 
 
@@ -148,7 +149,7 @@ module.exports.forgetPassword = BigPromise(async (req,res,next) => {
     await user.save({validateBeforeSave: false})
 
     // creating a custom url for user to reset password
-    const resetPasswordUrl = `${req.protocol}://${req.get("host")}/user/password/reset/${forgetToken}`;
+    const resetPasswordUrl = `${req.protocol}://${req.get("host")}/api/v1/user/password/reset/${forgetToken}`;
 
     // craft a message for user containing the above created url
     const message = `Copy-Paste this link in your url for reset the password \n\n ${resetPasswordUrl}`;
@@ -183,4 +184,49 @@ module.exports.forgetPassword = BigPromise(async (req,res,next) => {
         // send error message 
         return next(new CustomError(error.message, 500));
     }
+})
+
+module.exports.resetPassword = BigPromise(async (req,res,next) => {
+
+    // getting token from params
+    const token = req.params.token;
+
+    // encrypt the token to compare with token inside the database
+    const forgetPasswordToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+
+    // finding the user having same encrypted forgetPasswordToken
+    const user = await User.findOne({
+        forgetPasswordToken,
+        // check whether the token time is valid or not
+        forgetPasswordExpiry: { $gt: Date.now() }
+    });
+
+    // if no user found
+    if(!user){
+        // show message
+        return next(new CustomError('Token is invalid / expired ', 400));
+    }
+
+    // if user found 
+    // get value of new password and confirm password from body
+    if( req.body.password !== req.body.cnfPassword){
+        return next(new CustomError('Password and confirm password does not match', 400));
+    }
+
+
+    // update the user's password
+    user.password = req.body.password;
+
+    // reset values of forgetToken and the expiry time 
+    user.forgetPasswordToken = undefined;
+    user.forgetPasswordExpiry = undefined;
+
+    // save the user inside the database
+    await user.save();
+
+    // return the token
+    cookieGenerator(user,res);
 })

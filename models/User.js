@@ -116,7 +116,7 @@ userSchema.methods.resetPasswordToken = function(){
     .digest("hex");
 
     // expiry time of token 20 minutes
-    this.forgetPasswordExpiry = Date.now() + 20 * 60 * 1000;
+    this.forgetPasswordExpiry = Date.now() + 20*60*1000;
 
     // return the string token ( not the hash token )
     return forgotToken;
