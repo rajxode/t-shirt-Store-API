@@ -16,6 +16,7 @@ const cloudinary = require('cloudinary').v2;
 
 // for creating custom error message
 const CustomError = require('../utils/customError');
+const mailHelper = require('../utils/emailHelper');
 
 
 
@@ -117,4 +118,69 @@ module.exports.logout = BigPromise(async (req,res,next) => {
         success:true,
         message:"User logout successfully"
     })
+})
+
+
+// to send a mail to user for reset the password
+module.exports.forgetPassword = BigPromise(async (req,res,next) => {
+
+    // getting user's email 
+    const {email} = req.body;
+
+    // if user doesn't give an email
+    if(!email){
+        return next(new CustomError('Please give value for email', 400));
+    }
+
+    // find user in database
+    const user = await User.findOne({email});
+
+    // if user doesn't exists inside the database
+    if(!user){
+        return next(new CustomError('User does not exists', 400));
+    }
+
+    // getting a token for reset password for user
+    const forgetToken = user.resetPasswordToken();
+
+    // save the token inside the database as it was not saved initially
+    // save without validating any previous values 
+    await user.save({validateBeforeSave: false})
+
+    // creating a custom url for user to reset password
+    const resetPasswordUrl = `${req.protocol}://${req.get("host")}/user/password/reset/${forgetToken}`;
+
+    // craft a message for user containing the above created url
+    const message = `Copy-Paste this link in your url for reset the password \n\n ${resetPasswordUrl}`;
+
+
+    // sending mail to user's email address
+    try {
+        // using helper function created using nodemailer
+        await mailHelper({
+            // address on which the mail will be sent
+            toMail: user.email,
+            // email subject
+            subject: 'Reset password',
+            // email message
+            message
+        });
+        
+        // return success message on sending message
+        return res.status(200).send({
+            success:true,
+            message:'Email send to your registered email address '
+        })
+    
+    // if there is some error in sending mail 
+    } catch (error) {
+        // reset value of token and token expiry time
+        user.forgetPasswordToken=undefined;
+        user.forgetPasswordExpiry=undefined;
+        // save user in DB
+        await user.save({validateBeforeSave: false});
+
+        // send error message 
+        return next(new CustomError(error.message, 500));
+    }
 })

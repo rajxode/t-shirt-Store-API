@@ -16,6 +16,8 @@ router.route('/signup').post(userController.signup);
 router.route('/login').post(userController.login);
 // logout route
 router.route('/logout').get(userController.logout);
+// forgetPassword
+router.route('/forgetpassword').post(userController.forgetPassword);
 
 // export route
 module.exports = router;
