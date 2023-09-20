@@ -244,3 +244,34 @@ module.exports.userDashboard = BigPromise(async (req,res,next) => {
         user
     });
 })
+
+
+// to return loggedIn user's data
+module.exports.updatePassword = BigPromise(async (req,res,next) => {
+
+
+    // get user data(including password) from database using user's id
+    const user = await User.findById(req.user.id).select('+password');
+
+    // checking whether the old password matches with db
+    const isVerified = await user.isPasswordMatch(req.body.oldPassword);
+
+    // if password doesn't match
+    if(!isVerified){
+        return next(new CustomError('Incorrect old password', 400));
+    }
+
+    // if password match
+    // check whether new entered password and confirm password match or not
+    if(req.body.newPassword !== req.body.cnfPassword){
+        return next(new CustomError('New password and Confirm password does not match', 400));
+    }
+
+    // save new password
+    user.password = req.body.newPassword;
+
+    // save data inside the database
+    await user.save();
+    // generate new token
+    cookieGenerator(user,res);
+})

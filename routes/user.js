@@ -24,6 +24,8 @@ router.route('/forgetpassword').post(userController.forgetPassword);
 router.route('/password/reset/:token').post(userController.resetPassword);
 // dashboard
 router.route('/dashboard').get(isLoggedIn, userController.userDashboard);
+// update password
+router.route('/password/update').post(isLoggedIn, userController.updatePassword);
 
 // export route
 module.exports = router;
