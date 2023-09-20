@@ -313,3 +313,103 @@ paths:
           description: Bad request
         500:
           description: Internal Server Error
+  
+  /user/dashboard:
+    get:
+    # grouping the paths
+      tags:
+        - User
+      summary: return info of loggedIn user
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      photo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          secure_url:
+                            type: string
+                      id:
+                        type: string
+                      createdAt:
+                        type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+  
+  /user/password/update:
+    post:
+    # grouping the paths
+      tags:
+        - User
+      summary: update user's password
+      requestBody:
+        # all values are required
+        required: true
+        # content 
+        content:
+          application/json:
+            schema:
+              # takes an object
+              type: object
+              properties:
+                oldPassword:
+                  type: string
+                newPassword:
+                  type: string
+                cnfPassword:
+                  type: string
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      photo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          secure_url:
+                            type: string
+                      id:
+                        type: string
+                      createdAt:
+                        type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error

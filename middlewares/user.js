@@ -13,8 +13,8 @@ const jwt = require('jsonwebtoken');
 exports.isLoggedIn = BigPromise(async( req,res,next) => {
     
     // getting the value of token from cookies / header
-    const token = req.cookies.token ||  
-                req.header("Authorization").replace('Bearer ','') ;
+    const token = req.cookies.token ;
+    // ||  req.header("Authorization").replace('Bearer ','') ;
 
     // if no token is present 
     if(!token){
