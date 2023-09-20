@@ -230,3 +230,17 @@ module.exports.resetPassword = BigPromise(async (req,res,next) => {
     // return the token
     cookieGenerator(user,res);
 })
+
+
+// to return loggedIn user's data
+module.exports.userDashboard = BigPromise(async (req,res,next) => {
+    
+    // get user data from database by his id
+    const user = await User.findById(req.user.id);
+
+    // return user's data
+    res.status(200).json({
+        success: true,
+        user
+    });
+})
