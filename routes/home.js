@@ -16,6 +16,9 @@ router.get('/',homeController.home);
 router.use('/user',require('./user'));
 // for admin routes
 router.use('/admin',require('./admin'));
+// for products related routes
+router.use('/product',require('./product'));
+
 
 // export the router
 module.exports = router;

@@ -413,3 +413,121 @@ paths:
           description: Bad request
         500:
           description: Internal Server Error
+  
+  /admin/userList:
+    get:
+    # grouping the paths
+      tags:
+        - Admin
+      summary: if logged in person is admin, return list of all the user inside the database
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  users:
+                    type: array
+                    items: 
+                      type: object
+                      properties:
+                        photo:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            secure_url:
+                              type: string
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        email:
+                          type: string
+                        role:
+                          type: string
+                        createdAt:
+                          type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+  
+  /admin/singleUser/{id}:
+    get:
+    # grouping the paths
+      tags:
+        - Admin
+      summary: if logged in person is admin, return a single user by his id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  user:
+                    type: object
+                    properties:
+                      photo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          secure_url:
+                            type: string
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      role:
+                        type: string
+                      createdAt:
+                        type: string 
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+    
+    delete:
+    # grouping the paths
+      tags:
+        - Admin
+      summary: if logged in person is admin, delete a single user by his id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
