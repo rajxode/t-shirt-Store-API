@@ -33,4 +33,22 @@ exports.isLoggedIn = BigPromise(async( req,res,next) => {
 
     // call the next operation
     next();
-})
+});
+
+
+// check the role of loggedIn user
+// store the value of passed role inside array
+exports.customRole = (...roles) => {
+    // comparing role of loggedIn user
+    return (req,res,next) => {
+        // if the role doesn't match to the passed role value
+        if(!roles.includes(req.user.role)){
+            // give error
+            return next(new CustomError('You are not allowed to visit this address', 403));
+        }
+
+        // if value match
+        // perform next operation
+        next();
+    }
+}

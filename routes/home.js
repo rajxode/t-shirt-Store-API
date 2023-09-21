@@ -14,6 +14,8 @@ const homeController = require('../controllers/homeController');
 router.get('/',homeController.home);
 // for all /user routes
 router.use('/user',require('./user'));
+// for admin routes
+router.use('/admin',require('./admin'));
 
 // export the router
 module.exports = router;
