@@ -186,6 +186,7 @@ module.exports.forgetPassword = BigPromise(async (req,res,next) => {
     }
 })
 
+
 module.exports.resetPassword = BigPromise(async (req,res,next) => {
 
     // getting token from params
@@ -274,4 +275,62 @@ module.exports.updatePassword = BigPromise(async (req,res,next) => {
     await user.save();
     // generate new token
     cookieGenerator(user,res);
+})
+
+// update user's info (except password)
+module.exports.updateUserInfo = BigPromise(async (req,res,next) => {
+
+    // getting new values of email and name from user
+    const newData = {
+        name:req.body.name,
+        email:req.body.email,
+    }
+
+
+    // checking whether there is any files
+    if(req.files){  
+
+        // if user uploades a new file
+
+        const user = await User.findById(req.user.id);
+        // get photo id of previously uploaded image
+        const imageId = user.photo.id;
+
+        // delete the previously uploaded image
+        const delResult = await cloudinary.uploader.destroy(imageId);
+
+        // upload the new image on cloudinary
+        const result = await cloudinary.uploader.upload(req.files.photo.tempFilePath,{
+            folder:process.env.CLOUD_FOLDER,
+            width:150,
+            crop:'scale'
+        })
+
+        // store data of new uploaded image inside the newData object
+        newData.photo = {
+            id:result.public_id,
+            secure_url:result.secure_url,
+        }
+    }
+
+    // update the user's data inside the database
+    const user = await User.findByIdAndUpdate(
+                            // finding user inside the db with id
+                            req.user.id,
+                            // update data with new data
+                            newData,
+                            // options for updating
+                            {
+                                new:true,
+                                runValidators:true,
+                                useFindAndModify: false,
+                            }
+                        );
+    
+    // return updated user
+    res.status(200).json({
+        success:true,
+        user
+    });
+    
 })
