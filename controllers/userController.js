@@ -8,9 +8,6 @@ const BigPromise = require('../middlewares/bigPromise');
 // to create a cookie token
 const cookieGenerator = require('../utils/cookieGenerator');
 
-// for uploading files
-const fileUpload = require('express-fileupload');
-
 // for uploading files to cloudinary
 const cloudinary = require('cloudinary').v2;
 

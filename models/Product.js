@@ -52,9 +52,9 @@ const productSchema = new mongoose.Schema({
         // predefine values for product category
         enum: {
             values:[
-                'short-sleeves',
-                'long-sleeves',
-                'sweatshirts',
+                'shortSleeves',
+                'longSleeves',
+                'sweatShirts',
                 'hoodies'
             ],
             // if user give a value other than the above mentioned values then show following message

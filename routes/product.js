@@ -8,10 +8,11 @@ const router = express.Router();
 // controller
 const productController = require('../controllers/productController');
 
+// middleware to check whether user is loggedIn or not
 const {isLoggedIn, customRole} = require('../middlewares/user');
 
-
-router.route('/').get(productController.home);
+// route for adding a product
+router.route('/addProduct').post(isLoggedIn, productController.addProduct);
 
 // export route
 module.exports = router;
