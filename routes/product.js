@@ -12,7 +12,8 @@ const productController = require('../controllers/productController');
 const {isLoggedIn, customRole} = require('../middlewares/user');
 
 // route for adding a product
-router.route('/addProduct').post(isLoggedIn, productController.addProduct);
+router.route('/addProduct').post(isLoggedIn, customRole('admin'), productController.addProduct);
 
+router.route('/getAllProducts').get(isLoggedIn, productController.getAllProducts);
 // export route
 module.exports = router;

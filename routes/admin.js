@@ -21,5 +21,8 @@ router.route('/singleUser/:id')
         // delete a single user based on id
         .delete(isLoggedIn, customRole('admin'), adminController.deleteSingleUser)
 
+// for products related routes
+router.use('/product',require('./product'));
+
 // export route
 module.exports = router;

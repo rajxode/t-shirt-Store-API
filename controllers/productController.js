@@ -11,6 +11,7 @@ const cloudinary = require('cloudinary').v2;
 
 // for creating custom error message
 const CustomError = require('../utils/customError');
+const WhereClause = require('../utils/whereClause');
 
 
 // controller for adding a new product
@@ -61,3 +62,46 @@ module.exports.addProduct = BigPromise(async(req,res,next) => {
     })
 
 })
+
+
+module.exports.getAllProducts = BigPromise(async(req,res,next) => {
+
+    // show product on each page
+    const showPerPage = 4;
+
+    // number of total products inside the database
+    const totalProduct = await Product.countDocuments();
+
+
+    // getting result in the form of object from the WhereClause class
+    // providing base = Product.find()          // search all the product
+    // providing bigQuery = req.query
+    let productsObj = new WhereClause(Product.find() , req.query )
+                    // search for all the products
+                    .search()
+                    // filter products
+                    .filter();
+
+
+
+    // getting list of products from the above object
+    let products = await productsObj.base;
+
+    // length of resultant product from class
+    const filteredProducts = products.length;
+
+    // apply page function on the result products
+    productsObj.pager(showPerPage);
+    // update products array by new pager values
+    // use .clone() when performing  chain process of mongoose operation
+    products = await productsObj.base.clone();
+
+
+    // finally return the data
+    res.status(200).json({
+        success:true,
+        products,
+        filteredProducts,
+        totalProduct
+    })
+});
