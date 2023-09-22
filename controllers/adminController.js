@@ -64,26 +64,16 @@ module.exports.updateSingleUser = BigPromise( async(req,res,next) => {
         role:req.body.role
     }
 
-    // finding user by id
-    const user = await User.findById(req.params.id);
+    const user = await User.findByIdAndUpdate(
+        req.params.id,
+        newData,
+        {
+            new:true,
+            runValidators:true,
+            useFindAndModify: false
+        }
+    )
 
-
-    // user not found
-    if(!user){
-        // error message
-        return next(new CustomError('No User found' , 400));
-    }
-
-
-    // udpate user data
-    user.name = newData.name;
-    user.email = newData.email;
-    user.role = newData.role;
-
-    // save user
-    await user.save();
-
-    // return user
     res.status(200).json({
         success:true,
         user
@@ -111,7 +101,6 @@ module.exports.deleteSingleUser = BigPromise( async(req,res,next) => {
 
     // delete the user 
     await User.findByIdAndDelete(req.params.id);
-
 
     // return message
     res.status(200).json({

@@ -16,7 +16,6 @@ const cookieParser = require('cookie-parser');
 // for uploading files
 const fileUpload = require('express-fileupload');
 
-
 // for api-docs
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs')
@@ -29,6 +28,8 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended:true
 }));
+
+
 // for cookie
 app.use(cookieParser());
 // for uploading files
