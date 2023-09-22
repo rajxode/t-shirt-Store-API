@@ -64,6 +64,7 @@ module.exports.updateSingleUser = BigPromise( async(req,res,next) => {
         role:req.body.role
     }
 
+    // find user and update data
     const user = await User.findByIdAndUpdate(
         req.params.id,
         newData,
@@ -73,6 +74,10 @@ module.exports.updateSingleUser = BigPromise( async(req,res,next) => {
             useFindAndModify: false
         }
     )
+
+    if(!user){
+        return next(new CustomError('User does not exist, Please check the Id', 400));
+    }
 
     res.status(200).json({
         success:true,
