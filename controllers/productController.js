@@ -28,13 +28,40 @@ module.exports.addProduct = BigPromise(async(req,res,next) => {
     // if there are some files
     if(req.files){
 
+        // incase user send more than 1 image
+        if( req.files.photos.length > 1){
 
-        // map over each image in array and upload on cloudinary
-        for(let i = 0; i < req.files.photos.length; i++){
+            // map over each image
+            for(let i = 0; i < req.files.photos.length; i++){
 
+                // get every file
+                const file = req.files.photos[i];
+                
+                // uploading each file
+                const result = await cloudinary.uploader.upload(file.tempFilePath,{
+                    folder:process.env.CLOUD_PRODUCT_FOLDER
+                })
+
+                // push result of uploaded image in array
+                imageArray.push(
+                    {
+                        id:result.public_id,
+                        secure_url:result.secure_url
+                    }
+                )
+            }
+        }
+
+        // incase user send only one image
+        // seperate function for single image because single image comes as an object and not as an array
+        else{
+            
+            // get the file
+            const file = req.files.photos;
+            
             // uploading 
-            const result = await cloudinary.uploader.upload(req.files.photos[i].tempFilePath, {
-                folder: process.env.CLOUD_PRODUCT_FOLDER
+            const result = await cloudinary.uploader.upload(file.tempFilePath,{
+                folder:process.env.CLOUD_PRODUCT_FOLDER
             })
 
             // push result of uploaded image in array

@@ -115,7 +115,7 @@ paths:
                           secure_url:
                             type: string
                       createdAt:
-                        type: date
+                        type: string
         400:
           description: Bad request
         500:
@@ -591,6 +591,172 @@ paths:
                     type: boolean
                   message:
                     type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server 
+          
+  /admin/product/addProduct:
+    post:
+      tags:
+        - Admin
+      summary: if Admin, create add a new Product
+      # type of data taken
+      consumes:
+        - multipart/form-data
+      # type of output produced
+      produces:
+        - application/json
+      # params passed to add new course
+      requestBody:
+        # all values are required
+        required: true
+        # content 
+        content:
+          multipart/form-data:
+            schema:
+              # takes an object
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                description:
+                  type: string
+                photos:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                category:
+                  type: string
+                  enum: [shortSleeves,longSleeves,sweatShirts,hoodies]
+                  default: shortSleeves
+                brand:
+                  type: string
+      responses:
+        200:
+        # return the entered object
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  product:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      price:
+                        type: number
+                      description:
+                        type: string
+                      photos:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            secure_url:
+                              type: string
+                      category:
+                        type: string
+                      brand:
+                        type: string
+                      rating:
+                        type: number
+                      numberOfReviews:
+                        type: number
+                      reviews:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            user:
+                              type: string
+                            name:
+                              type: string
+                            rating:
+                              type: number
+                            comment:
+                              type: string
+                      user:
+                        type: string
+                      createdAt:
+                        type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+  
+  /product/getAllProducts:
+    get:
+      tags:
+        - Product
+      summary: if loggedIn, return list of all the products
+      responses:
+        200:
+        # return the entered object
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  products:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      price:
+                        type: number
+                      description:
+                        type: string
+                      photos:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            secure_url:
+                              type: string
+                      category:
+                        type: string
+                      brand:
+                        type: string
+                      rating:
+                        type: number
+                      numberOfReviews:
+                        type: number
+                      reviews:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            user:
+                              type: string
+                            name:
+                              type: string
+                            rating:
+                              type: number
+                            comment:
+                              type: string
+                      user:
+                        type: string
+                      createdAt:
+                        type: string
+                  filteredProducts:
+                    type: number
+                  totalProduct:
+                    type: number
         400:
           description: Bad request
         500:
