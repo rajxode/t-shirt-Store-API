@@ -16,6 +16,8 @@ router.get('/',homeController.home);
 router.use('/user',require('./user'));
 // for admin routes
 router.use('/admin',require('./admin'));
+// for managers routes
+router.use('/manager',require('./manager'));
 // for products related routes
 router.use('/product',require('./product'));
 

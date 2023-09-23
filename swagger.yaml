@@ -482,7 +482,55 @@ paths:
           description: Bad request
         500:
           description: Internal Server Error
-  
+
+
+  # route for manager to get list of all the user with role = 'user'
+  /manager/userList:
+    get:
+    # grouping the paths
+      tags:
+        - Manager
+      summary: if Manager, return list of all users with role 'user'
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return array of all the users
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  users:
+                    type: array
+                    items: 
+                      type: object
+                      properties:
+                        photo:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            secure_url:
+                              type: string
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        email:
+                          type: string
+                        role:
+                          type: string
+                        createdAt:
+                          type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+
+
   # route for admin to see info an user by his id
   /admin/singleUser/{id}:
     get:
