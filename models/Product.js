@@ -66,8 +66,8 @@ const productSchema = new mongoose.Schema({
         type: String,
         required:[true, 'Please give a brand name']
     },
-    // product rating
-    rating:{
+    // product average rating
+    ratings:{
         type:Number,
         default: 0
     },

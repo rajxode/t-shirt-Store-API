@@ -30,7 +30,13 @@ router.route('/:id')
 // get list of all the products
 router.route('/getAllProducts').get(isLoggedIn, productController.getAllProducts);
 // get data of a single product by it's Id
-router.route('/getOneProduct/:id').get(isLoggedIn, productController.getOneProduct)
+router.route('/getOneProduct/:id').get(isLoggedIn, productController.getOneProduct);
+// to add a review on a product
+router.route('/addReview/:id').put(isLoggedIn, productController.addReview);
+// to delete your review from a product
+router.route('/deleteReview/:id').put(isLoggedIn, productController.deleteReview);
+// to get list of all the reviews on a product
+router.route('/allReview/:id').get(isLoggedIn, productController.getAllReviews);
 
 
 // export route

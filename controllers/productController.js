@@ -286,3 +286,144 @@ module.exports.getOneProduct = BigPromise(async(req,res,next) => {
         product
     })
 })
+
+// for all the users to add a review on a product
+module.exports.addReview = BigPromise(async(req,res,next) => {
+    const productId = req.params.id;
+
+    // getting value from req.body
+    const { rating, comment } = req.body;
+
+    // creating a new review from values given by user
+    const review = {
+        // uesr who creating review
+        user:req.user._id,
+        // name of user
+        name:req.user.name,
+        // rating
+        rating: Number(rating),
+        // comment
+        comment
+    }
+
+    // finding the product on which we have to add the review
+    const product = await Product.findById(productId);
+
+    // if no product found for the id
+    if(!product){
+        return next(new CustomError('No product found', 401));
+    }
+
+    // check whether the user has already given a review on the product
+    const alreadyReviewed = product
+                            .reviews
+                            // mapping over each review and checking uesr id for the review
+                            .find( (rev) => rev.user.toString() === req.user._id.toString());
+
+
+    // if user has already given review on the product
+    if(alreadyReviewed){
+        // udpate the review
+
+        // map over each review
+        product.reviews.forEach((review) => {
+            // if review found
+            if(review.user.toString() === req.user._id.toString()){
+                // update the comment and rating
+                review.comment = comment;
+                review.rating = Number(rating);
+            }
+        })
+    }
+    // if user has not posted any review before 
+    // create a new one
+    else{
+        // push the review inside the array
+        product.reviews.push(review);
+        // increse the number of total reviews
+        product.numberOfReviews = product.reviews.length;
+    }
+
+    // adjust average ratings of product
+    // average = total ratings / number of ratings
+    product.ratings = product.reviews.reduce((acc, item) => item.rating + acc, 0) / product.reviews.length;
+
+    // save the product 
+    await product.save({validateBeforeSave: false});
+
+    // return the response
+    res.status(200).json({
+        success:true,
+        message:'Added Review'
+    })
+})
+
+
+// for all the users to delete their review on a product
+module.exports.deleteReview = BigPromise(async (req,res,next) => {
+
+    // getting productId
+    const productId = req.params.id;
+
+    // finding the product on which we have to add the review
+    const product = await Product.findById(productId);
+
+    // if no product found for the id
+    if(!product){
+        return next(new CustomError('No product found', 401));
+    }
+
+    const reviews = product.reviews.filter(
+        (rev) => rev.user.toString() !== req.user._id.toString()
+      );
+    
+      const numberOfReviews = reviews.length;
+    
+      // adjust ratings
+    
+      const ratings = Number( reviews.reduce((acc, item) => item.rating + acc, 0) / reviews.length) || 0;
+    
+      //update the product
+    
+      await Product.findByIdAndUpdate(
+        productId,
+        {
+          reviews,
+          ratings,
+          numberOfReviews,
+        },
+        {
+          new: true,
+          runValidators: true,
+          useFindAndModify: false,
+        }
+      );
+    
+      res.status(200).json({
+        success: true,
+        message:'Review deleted'
+      });
+})
+
+
+// to get just all the reviews on a product
+module.exports.getAllReviews = BigPromise(async(req,res,next) => {
+
+    // getting productId
+    const productId = req.params.id;
+
+    // finding the product on which we have to add the review
+    const product = await Product.findById(productId);
+
+    // if the product doesn't exist
+    if(!product){
+        return next(new CustomError('No product found' , 401));
+    }
+
+    // return the response
+    res.status(200).json({
+        success:true,
+        reviews: product.reviews
+    })
+})
+
