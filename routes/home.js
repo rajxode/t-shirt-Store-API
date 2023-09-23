@@ -20,6 +20,8 @@ router.use('/admin',require('./admin'));
 router.use('/manager',require('./manager'));
 // for products related routes
 router.use('/product',require('./product'));
+// for payment related routes
+router.use('/payment',require('./payment'));
 
 
 // export the router

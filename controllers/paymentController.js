@@ -1,0 +1,65 @@
+
+// bigPromise for functions
+const BigPromise = require('../middlewares/bigPromise');
+
+const stripe = require('stripe')(process.env.STRIPE_SECRET);
+const Razorpay = require('razorpay');
+
+
+// controller to return stripe public key
+module.exports.stripeKey = BigPromise(async(req,res,next) => {
+    // return key
+    res.status(200).json({
+        stripeKey:process.env.STRIPE_API_KEY
+    })
+});
+
+// controller to return razorpay public key
+module.exports.razorpayKey = BigPromise(async(req,res,next) => {
+    // return the key
+    res.status(200).json({
+        razorpayKey:process.env.RAZORPAY_API_KEY
+    })
+});
+
+
+// capture the payment 
+module.exports.stripePayment = BigPromise(async(req,res,next) => {
+    const paymentIntent = await stripe.paymentIntents.create({
+        amount: req.body.amount,
+        currency: 'inr',
+
+        // optional
+        metadata: { integration_check: 'accept_a_payment' }
+    });
+
+    res.status(200).json({
+        success:true,
+        client_secret: paymentIntent.client_secret
+    })
+});
+
+
+// capture payment using razorpay
+module.exports.razorpayPayment = BigPromise(async(req,res,next) => {
+
+    var instance = new Razorpay({ 
+        key_id: process.env.RAZORPAY_API_KEY, 
+        key_secret: process.env.RAZORPAY_SECRET 
+    })
+
+    // create a new order using razorpay instance
+    const myOrder = await instance.orders.create({
+                            // amount from req.body
+                            amount: req.body.amount,
+                            // currency
+                            currency: "INR",
+                        });
+    
+    res.status(200).json({
+        success:true,
+        amount:req.body.amount,
+        order:myOrder
+    })
+
+});
