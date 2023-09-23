@@ -34,7 +34,7 @@ router.route('/getOneProduct/:id').get(isLoggedIn, productController.getOneProdu
 // to add a review on a product
 router.route('/addReview/:id').put(isLoggedIn, productController.addReview);
 // to delete your review from a product
-router.route('/deleteReview/:id').put(isLoggedIn, productController.deleteReview);
+router.route('/deleteReview/:id').delete(isLoggedIn, productController.deleteReview);
 // to get list of all the reviews on a product
 router.route('/allReview/:id').get(isLoggedIn, productController.getAllReviews);
 

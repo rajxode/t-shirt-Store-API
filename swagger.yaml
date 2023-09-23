@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info: # info about the project
   title: T-shirt Store API
-  description: return product / user data
+  description: return product / user data based on different urls
   version: 1.1.0
 
 servers:
@@ -13,13 +13,11 @@ servers:
       version:
         enum:
           - v1
-          - v2
         default: v1
       #  protocols 
       protocol:
         enum:
           - http
-          - https
         default: http
 
 # for auth
@@ -35,17 +33,20 @@ components:
 
 # routes
 paths:
+  # home route
   /:
     get:
     # grouping the paths
       tags:
         - Greetings
       summary: return a greeting message
+      # response
       responses:
         200:
           description: Success, OK
           content:
             application/json:
+              # response message
               schema:
                 type: string
                 example: "greetingString"
@@ -54,6 +55,7 @@ paths:
         500:
           description: Internal Server Error
 
+  # signup route for a user
   /user/signup:
     post:
       tags:
@@ -65,7 +67,7 @@ paths:
       # type of output produced
       produces:
         - application/json
-      # params passed to add new course
+      # data passed to the req.body
       requestBody:
         # all values are required
         required: true
@@ -76,22 +78,27 @@ paths:
               # takes an object
               type: object
               properties:
+                # user name
                 name:
                   type: string
+                # user email
                 email:
                   type: string
+                # password
                 password:
                   type: string
+                # photo
                 photo:
                   type: string
                   format: binary
+      # response generated
       responses:
         200:
-        # return the entered object
           description: Success, OK
           content:
             application/json:
               schema:
+                # return the created user
                 type: object
                 properties:
                   success: 
@@ -121,6 +128,7 @@ paths:
         500:
           description: Internal Server Error
 
+  # login route for user
   /user/login:
     post:
       tags:
@@ -132,7 +140,7 @@ paths:
       # type of output produced
       produces:
         - application/json
-      # params passed to add new course
+      # values to be passed inside req.body
       requestBody:
         # all values are required
         required: true
@@ -140,20 +148,21 @@ paths:
         content:
           application/json:
             schema:
-              # takes an object
+              # takes an object containing email and password
               type: object
               properties:
                 email:
                   type: string
                 password:
                   type: string
+      # response generated
       responses:
         200:
-        # return the entered object
           description: Success, OK
           content:
             application/json:
               schema:
+                # return the login user's data
                 type: object
                 properties:
                   success: 
@@ -185,18 +194,21 @@ paths:
         500:
           description: Internal Server Error
 
+  # route for logging out the user
   /user/logout:
     get:
     # grouping the paths
       tags:
         - User
       summary: logout user by removing his token
+      # response generated
       responses:
         200:
           description: Success, OK
           content:
             application/json:
               schema:
+                # return success message
                 type: object
                 properties:
                   success:
@@ -208,18 +220,19 @@ paths:
         500:
           description: Internal Server Error
 
+  # route for forgetpassword, send email to user for reset password url
   /user/forgetpassword:
     post:
       tags:
         - User
-      summary: send a mail to user containing url to reset password
+      summary: send a mail at given email address containing url to reset password
       # type of data taken
       consumes:
         - application/json
       # type of output produced
       produces:
         - application/json
-      # params passed to add new course
+      # values to be passed in req.body , user's email
       requestBody:
         # all values are required
         required: true
@@ -232,13 +245,14 @@ paths:
               properties:
                 email:
                   type: string
+      # response generated
       responses:
         200:
-        # return the entered object
           description: Success, OK
           content:
             application/json:
               schema:
+                # return success message
                 type: object
                 properties:
                   success: 
@@ -250,12 +264,13 @@ paths:
         500:
           description: Internal Server Error
   
+  # route to reset password of user, in case user forget his password
   /user/password/reset/{token}:
     post:
     # grouping the paths
       tags:
         - User
-      summary: reset the password
+      summary: reset the password of logged in user
       # for parameter passed inside the path
       parameters:
         - name: token
@@ -270,19 +285,21 @@ paths:
         content:
           application/json:
             schema:
-              # takes an object
+              # takes an object containing new password, and confirm password
               type: object
               properties:
                 password:
                   type: string
                 cnfPassword:
                   type: string
+      # response generated
       responses:
         200:
           description: Success, OK
           content:
             application/json:
               schema:
+                # return new token and user's data
                 type: object
                 properties:
                   success: 
@@ -314,18 +331,21 @@ paths:
         500:
           description: Internal Server Error
   
+  # dashboard for logged in user to see his data
   /user/dashboard:
     get:
     # grouping the paths
       tags:
         - User
-      summary: return info of loggedIn user
+      summary: return info of logged in user
+      # response
       responses:
         200:
           description: Success, OK
           content:
             application/json:
               schema:
+                # return logged in user's data
                 type: object
                 properties:
                   success:
@@ -355,12 +375,13 @@ paths:
         500:
           description: Internal Server Error
   
+  # update the password of logged in user
   /user/password/update:
     post:
     # grouping the paths
       tags:
         - User
-      summary: update user's password
+      summary: update logged in user's password
       requestBody:
         # all values are required
         required: true
@@ -368,7 +389,7 @@ paths:
         content:
           application/json:
             schema:
-              # takes an object
+              # takes an object containing old password, new password and confirm password
               type: object
               properties:
                 oldPassword:
@@ -377,12 +398,14 @@ paths:
                   type: string
                 cnfPassword:
                   type: string
+      # response generated
       responses:
         200:
           description: Success, OK
           content:
             application/json:
               schema:
+                # return user's data and his token
                 type: object
                 properties:
                   success: 
@@ -414,18 +437,21 @@ paths:
         500:
           description: Internal Server Error
   
+  # route for admin to see list of all the user
   /admin/userList:
     get:
     # grouping the paths
       tags:
         - Admin
-      summary: if logged in person is admin, return list of all the user inside the database
+      summary: if Admin, return list of all the user inside the database
+      # response generated
       responses:
         200:
           description: Success, OK
           content:
             application/json:
               schema:
+                # return array of all the users
                 type: object
                 properties:
                   success:
@@ -457,24 +483,28 @@ paths:
         500:
           description: Internal Server Error
   
+  # route for admin to see info an user by his id
   /admin/singleUser/{id}:
     get:
     # grouping the paths
       tags:
         - Admin
-      summary: if logged in person is admin, return a single user by his id
+      summary: if Admin, return a single user by his id
+      # params 
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: string
+      # response generated
       responses:
         200:
           description: Success, OK
           content:
             application/json:
               schema:
+                # return user's data
                 type: object
                 properties:
                   success:
@@ -504,11 +534,13 @@ paths:
         500:
           description: Internal Server Error
     
+    # to update info of any user by his id
     put:
     # grouping the paths
       tags:
         - Admin
-      summary: if logged in person is admin, return a single user by his id
+      summary: if Admin, return a single user by his id
+      # params
       parameters:
         - name: id
           in: path
@@ -522,7 +554,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              # takes an object
+              # takes an object containing user's data
               type: object
               properties:
                 name:
@@ -533,12 +565,14 @@ paths:
                   type: string
                   enum: [user,admin,manager]
                   default: user
+      # response of user
       responses:
         200:
           description: Success, OK
           content:
             application/json:
               schema:
+                # return updated user data
                 type: object
                 properties:
                   success:
@@ -568,23 +602,27 @@ paths:
         500:
           description: Internal Server Error
 
+    # route for admin to delete any user by his id
     delete:
     # grouping the paths
       tags:
         - Admin
-      summary: if logged in person is admin, delete a single user by his id
+      summary: if Admin, delete a single user by his id
+      # params
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: string
+      # response generated
       responses:
         200:
           description: Success, OK
           content:
             application/json:
               schema:
+                # return success message
                 type: object
                 properties:
                   success:
@@ -596,6 +634,7 @@ paths:
         500:
           description: Internal Server 
           
+  # route for admin to add a new product
   /admin/product/addProduct:
     post:
       tags:
@@ -607,7 +646,6 @@ paths:
       # type of output produced
       produces:
         - application/json
-      # params passed to add new course
       requestBody:
         # all values are required
         required: true
@@ -615,26 +653,33 @@ paths:
         content:
           multipart/form-data:
             schema:
-              # takes an object
+              # takes an object containing product data
               type: object
               properties:
+                # name
                 name:
                   type: string
+                # product price
                 price:
                   type: number
+                # description of product
                 description:
                   type: string
+                # images related to product
                 photos:
                   type: array
                   items:
                     type: string
                     format: binary
+                # product category
                 category:
                   type: string
                   enum: [shortSleeves,longSleeves,sweatShirts,hoodies]
                   default: shortSleeves
+                # product's brand
                 brand:
                   type: string
+      # response generated
       responses:
         200:
         # return the entered object
@@ -642,6 +687,7 @@ paths:
           content:
             application/json:
               schema:
+                # return the product created
                 type: object
                 properties:
                   success: 
@@ -694,23 +740,202 @@ paths:
         500:
           description: Internal Server Error
   
+  # route for any logged in user to get list of all the product
   /product/getAllProducts:
     get:
       tags:
         - Product
-      summary: if loggedIn, return list of all the products
+      summary: if logged in, return list of all the products
       responses:
         200:
-        # return the entered object
           description: Success, OK
           content:
             application/json:
               schema:
+                # return array of all the products
                 type: object
                 properties:
                   success: 
                     type: boolean
                   products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        price:
+                          type: number
+                        description:
+                          type: string
+                        photos:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              secure_url:
+                                type: string
+                        category:
+                          type: string
+                        brand:
+                          type: string
+                        rating:
+                          type: number
+                        numberOfReviews:
+                          type: number
+                        reviews:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              user:
+                                type: string
+                              name:
+                                type: string
+                              rating:
+                                type: number
+                              comment:
+                                type: string
+                        user:
+                          type: string
+                        createdAt:
+                          type: string
+                    filteredProducts:
+                      type: number
+                    totalProduct:
+                      type: number
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+  
+  # route for admin to get list of all the products
+  /admin/product/adminGetProducts:
+    get:
+      tags:
+        - Admin
+      summary: if admin, return list of all the products
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return array of all the products
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        price:
+                          type: number
+                        description:
+                          type: string
+                        photos:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              secure_url:
+                                type: string
+                        category:
+                          type: string
+                        brand:
+                          type: string
+                        rating:
+                          type: number
+                        numberOfReviews:
+                          type: number
+                        reviews:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              user:
+                                type: string
+                              name:
+                                type: string
+                              rating:
+                                type: number
+                              comment:
+                                type: string
+                        user:
+                          type: string
+                        createdAt:
+                          type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+
+  # route for admin to update the data of any product by product id
+  /admin/product/{id}:
+    put:
+      tags:
+        - Admin
+      summary: if admin, update data of product by product_id
+      # params
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      consumes:
+        - multipart/form-data
+      # type of output produced
+      produces:
+        - application/json
+      requestBody:
+        # all values are required
+        required: true
+        # content 
+        content:
+          multipart/form-data:
+            schema:
+              # takes an object containing product data
+              type: object
+              properties:
+                name:
+                  type: string
+                price:
+                  type: number
+                description:
+                  type: string
+                photos:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                category:
+                  type: string
+                  enum: [shortSleeves,longSleeves,sweatShirts,hoodies]
+                  default: shortSleeves
+                brand:
+                  type: string
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return the updated product
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  product:
                     type: object
                     properties:
                       name:
@@ -753,10 +978,237 @@ paths:
                         type: string
                       createdAt:
                         type: string
-                  filteredProducts:
-                    type: number
-                  totalProduct:
-                    type: number
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+
+    # route for admin to delete any product by it's id
+    delete:
+      tags:
+        - Admin
+      summary: if admin, delete a product by product_id
+      # params
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return success message
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  message:
+                    type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+
+  # route for all the logged in user to get product info of any product by id
+  /product/getOneProduct/{id}:
+    get:
+      tags:
+        - Product
+      summary: if logged in, return a single product by it's id
+      # params product id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      # response generated
+      responses:
+        200:
+          description: Success, Ok
+          content:
+            application/json:
+              schema:
+                # return the data of product
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  product:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      price:
+                        type: number
+                      description:
+                        type: string
+                      photos:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            secure_url:
+                              type: string
+                      category:
+                        type: string
+                      brand:
+                        type: string
+                      rating:
+                        type: number
+                      numberOfReviews:
+                        type: number
+                      reviews:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            user:
+                              type: string
+                            name:
+                              type: string
+                            rating:
+                              type: number
+                            comment:
+                              type: string
+                      user:
+                        type: string
+                      createdAt:
+                        type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+  
+  # route to add a review to any product
+  /product/addReview/{id}:
+    put:
+      tags:
+        - Product
+      summary: if logged in, add a review on any product by giving product id
+      # params product id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      consumes:
+        - application/json
+      # type of output produced
+      produces:
+        - application/json
+      requestBody:
+        # all values are required
+        required: true
+        # content 
+        content:
+          application/json:
+            schema:
+              # takes an object containing product rating and feedback/comment about the product
+              type: object
+              properties:
+                rating:
+                  type: number
+                  default: 0
+                comment:
+                  type: string
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return success message
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  message:
+                    type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+
+  # route to delete review of logged in user from a product
+  /product/deleteReview/{id}:
+    delete:
+      tags:
+        - Product
+      summary: if logged in, delete user's review on a product
+      # params for product id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return success message
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  message:
+                    type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+  
+  # route to get list of all the reviews on a product 
+  /product/allReview/{id}:
+    get:
+      tags:
+        - Product
+      summary: if logged in, return all reviews on a product
+      # params for product id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return array containing all the reviews on product
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  reviews:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        user:
+                          type: string
+                        rating:
+                          type: number
+                        name:
+                          type: string
+                        comment:
+                          type: string
         400:
           description: Bad request
         500:

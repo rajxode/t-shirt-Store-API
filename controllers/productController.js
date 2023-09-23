@@ -230,6 +230,8 @@ module.exports.adminDeleteOne = BigPromise(async(req,res,next) => {
 
 
 
+
+
 // for all the users to get list of all the products
 module.exports.getAllProducts = BigPromise(async(req,res,next) => {
 
@@ -275,12 +277,17 @@ module.exports.getAllProducts = BigPromise(async(req,res,next) => {
 
 // for all the users to get a single product by it's id
 module.exports.getOneProduct = BigPromise(async(req,res,next) => {
+
+    // getting product by it's id
     const product = await Product.findById(req.params.id);
 
+    // if no product found
     if(!product){
         return next(new CustomError('No product found', 401));
     }
 
+    // if product found
+    // return product as response
     res.status(200).json({
         success:true,
         product
@@ -289,6 +296,8 @@ module.exports.getOneProduct = BigPromise(async(req,res,next) => {
 
 // for all the users to add a review on a product
 module.exports.addReview = BigPromise(async(req,res,next) => {
+    
+    // getting product id from params
     const productId = req.params.id;
 
     // getting value from req.body
@@ -373,36 +382,41 @@ module.exports.deleteReview = BigPromise(async (req,res,next) => {
         return next(new CustomError('No product found', 401));
     }
 
+    // creating new reviews array
+    // remove the review of user loggedIn
     const reviews = product.reviews.filter(
         (rev) => rev.user.toString() !== req.user._id.toString()
-      );
+    );
+
+    // total number of reviews
+    const numberOfReviews = reviews.length;
+
+    // adjust ratings
+    // if there was just a single review inside the array, we get result as 0/0 which is NaN, therefore using OR operator to give return 0 in such case
+    const ratings = Number( reviews.reduce((acc, item) => item.rating + acc, 0) / reviews.length) || 0;
+
+    //update the product
+    await Product.findByIdAndUpdate(
+                    // id of product
+                    productId,
+                    {
+                        // data to be updated
+                        reviews,
+                        ratings,
+                        numberOfReviews,
+                    },
+                    {
+                        new: true,
+                        runValidators: true,
+                        useFindAndModify: false,
+                    }
+                );
     
-      const numberOfReviews = reviews.length;
-    
-      // adjust ratings
-    
-      const ratings = Number( reviews.reduce((acc, item) => item.rating + acc, 0) / reviews.length) || 0;
-    
-      //update the product
-    
-      await Product.findByIdAndUpdate(
-        productId,
-        {
-          reviews,
-          ratings,
-          numberOfReviews,
-        },
-        {
-          new: true,
-          runValidators: true,
-          useFindAndModify: false,
-        }
-      );
-    
-      res.status(200).json({
-        success: true,
-        message:'Review deleted'
-      });
+    // return response 
+    res.status(200).json({
+    success: true,
+    message:'Review deleted'
+    });
 })
 
 
