@@ -1556,4 +1556,426 @@ paths:
           description: Bad request
         500:
           description: Internal Server Error
-                
+  
+  # return all order for a user
+  /order/myorder:
+    get:
+      tags:
+        - Order
+      summary: if logged in, return all the orders of logged in user
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return details about the payment
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  orders:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        # address for shippment
+                        shippingInfo:
+                          type: object
+                          properties:
+                            # address
+                            address:
+                              type: string
+                            # city 
+                            city:
+                              type: string
+                            # contact number
+                            phoneNo:
+                              type: string
+                            # state
+                            state:
+                              type: string
+                            # postal code
+                            pincode:
+                              type: string
+                            # country
+                            country:
+                              type: string
+                        # order details
+                        orderItems:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              # product name
+                              name:
+                                type: string
+                              # product quantity
+                              quantity:
+                                type: number
+                              # image related to product
+                              image:
+                                type: string
+                              # price of product
+                              price:
+                                type: number
+                              # product id
+                              product:
+                                type: string
+                                description: product id
+                        # payment info
+                        paymentInfo:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                        # tax amount applied on product
+                        taxAmount:
+                          type: number
+                        # shipping charges on product
+                        shippingAmount:
+                          type: number
+                        # total amount of product
+                        totalAmount:
+                          type: number
+                        # user who placed the order
+                        user:
+                          type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+  
+  # to get an order by it's id
+  /order/{id}:
+    get:
+      tags:
+        - Order
+      summary: if logged in, return an order by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return details about the payment
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  order:
+                    type: object
+                    properties:
+                      # address for shippment
+                      shippingInfo:
+                        type: object
+                        properties:
+                          # address
+                          address:
+                            type: string
+                          # city 
+                          city:
+                            type: string
+                          # contact number
+                          phoneNo:
+                            type: string
+                          # state
+                          state:
+                            type: string
+                          # postal code
+                          pincode:
+                            type: string
+                          # country
+                          country:
+                            type: string
+                      # order details
+                      orderItems:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            # product name
+                            name:
+                              type: string
+                            # product quantity
+                            quantity:
+                              type: number
+                            # image related to product
+                            image:
+                              type: string
+                            # price of product
+                            price:
+                              type: number
+                            # product id
+                            product:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                name:
+                                  type: string
+                      # payment info
+                      paymentInfo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                      # tax amount applied on product
+                      taxAmount:
+                        type: number
+                      # shipping charges on product
+                      shippingAmount:
+                        type: number
+                      # total amount of product
+                      totalAmount:
+                        type: number
+                      # user who placed the order
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          name:
+                            type: string
+                          email:
+                            type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+
+  # for admin to see all the orders
+  /admin/order/getAllOrder:
+    get:
+      tags:
+        - Admin
+      summary: if admin, return all orders inside the database
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return details about the payment
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  orders:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        # address for shippment
+                        shippingInfo:
+                          type: object
+                          properties:
+                            # address
+                            address:
+                              type: string
+                            # city 
+                            city:
+                              type: string
+                            # contact number
+                            phoneNo:
+                              type: string
+                            # state
+                            state:
+                              type: string
+                            # postal code
+                            pincode:
+                              type: string
+                            # country
+                            country:
+                              type: string
+                        # order details
+                        orderItems:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              # product name
+                              name:
+                                type: string
+                              # product quantity
+                              quantity:
+                                type: number
+                              # image related to product
+                              image:
+                                type: string
+                              # price of product
+                              price:
+                                type: number
+                              # product id
+                              product:
+                                type: string
+                                description: product id
+                        # payment info
+                        paymentInfo:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                        # tax amount applied on product
+                        taxAmount:
+                          type: number
+                        # shipping charges on product
+                        shippingAmount:
+                          type: number
+                        # total amount of product
+                        totalAmount:
+                          type: number
+                        # user who placed the order
+                        user:
+                          type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+
+  # for admin to update an order's data
+  /admin/order/update/{id}:
+    put:
+      tags:
+        - Admin
+      summary: if admin, update an order's status and other data by order id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        # all values are required
+        required: true
+        # content 
+        content:
+          application/json:
+            schema:
+              # takes an object containing amount to be paid
+              type: object
+              properties:
+                orderStatus:
+                  type: string
+                  enum: [processing,delivered,cancelled]
+                  default: processing
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return details about the payment
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  order:
+                    type: object
+                    properties:
+                      # address for shippment
+                      shippingInfo:
+                        type: object
+                        properties:
+                          # address
+                          address:
+                            type: string
+                          # city 
+                          city:
+                            type: string
+                          # contact number
+                          phoneNo:
+                            type: string
+                          # state
+                          state:
+                            type: string
+                          # postal code
+                          pincode:
+                            type: string
+                          # country
+                          country:
+                            type: string
+                      # order details
+                      orderItems:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            # product name
+                            name:
+                              type: string
+                            # product quantity
+                            quantity:
+                              type: number
+                            # image related to product
+                            image:
+                              type: string
+                            # price of product
+                            price:
+                              type: number
+                            # product id
+                            product:
+                              type: string
+                      # payment info
+                      paymentInfo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                      # tax amount applied on product
+                      taxAmount:
+                        type: number
+                      # shipping charges on product
+                      shippingAmount:
+                        type: number
+                      # total amount of product
+                      totalAmount:
+                        type: number
+                      # user who placed the order
+                      user:
+                        type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+
+  # for admin to delete an order by id
+  /admin/order/delete/{id}:
+    delete:
+      tags:
+        - Admin
+      summary: if admin, delete an order by order id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return details about the payment
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  message:
+                    type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error

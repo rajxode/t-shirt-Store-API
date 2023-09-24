@@ -99,31 +99,43 @@ module.exports.adminGetAllOrder = BigPromise( async(req,res,next) => {
 
 })
 
+// function to update the stock of a product on product delivery
 async function updateProductStock(productId,quantity){
 
+    // find the product by id
     const product = await Product.findById(productId);
 
+    // reduce the product stock 
     product.stock = product.stock - quantity;
 
+    // save the product inside the database
     await product.save({validateBeforeSave:false});
 }
 
 
-// get all order of logged in user
+// for admin to update an order by id
 module.exports.adminUpdateOrder = BigPromise( async(req,res,next) => {
-    // getting all the order
+    
+    // getting order 
     const order = await Order.findById(req.params.id);
 
-    if(req.body.orderStatus === 'delivered'){
+    // if the order is already delivered return back
+    if(order.orderStatus === 'delivered'){
         return next(new CustomError('Order is already delivered', 400));
     }
 
+    // update the order status
     order.orderStatus = req.body.orderStatus;
 
-    order.orderItems.forEach( async (prod) => {
-        await updateProductStock(prod.product , prod.quantity);
-    })
+    // if order status is changed to delivered, decrease the product stock
+    if(req.body.orderStatus === 'delivered'){
+        order.orderItems.forEach( async (prod) => {
+            // calling update stock function 
+            await updateProductStock(prod.product , prod.quantity);
+        })
+    }
 
+    // save the order
     await order.save();
 
 
@@ -135,8 +147,11 @@ module.exports.adminUpdateOrder = BigPromise( async(req,res,next) => {
 
 })
 
+
+// for admin to delete an order by id
 module.exports.adminDeleteOrder = BigPromise( async(req,res,next) => {
-    // getting all the order
+    
+    // getting order by id and deleting it
     await Order.findByIdAndDelete(req.params.id);
 
     // return response
