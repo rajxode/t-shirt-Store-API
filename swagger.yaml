@@ -1261,3 +1261,299 @@ paths:
           description: Bad request
         500:
           description: Internal Server Error
+
+  # return stripe public key
+  /payment/stripeKey:
+    get:
+      tags:
+        - Payment
+      summary: if logged in, return the public key of stripe
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return array containing all the reviews on product
+                type: object
+                properties:
+                  stripeKey: 
+                    type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+  
+  # return razorpay public key
+  /payment/razorpayKey:
+    get:
+      tags:
+        - Payment
+      summary: if logged in, return the public key of razorpay
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return array containing all the reviews on product
+                type: object
+                properties:
+                  razorpayKey: 
+                    type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+
+  # stripe capture payment
+  /payment/stripePayment:
+    post:
+      tags:
+        - Payment
+      summary: if logged in, capture the payment for stripe
+      requestBody:
+        # all values are required
+        required: true
+        # content 
+        content:
+          application/json:
+            schema:
+              # takes an object containing amount to be paid
+              type: object
+              properties:
+                amount:
+                  type: number
+                  default: 0
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return details about the payment
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  client_secret:
+                    type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+  
+  # razorpay capture payment
+  /payment/razorpayPayment:
+    post:
+      tags:
+        - Payment
+      summary: if logged in, capture the payment for razorpay
+      requestBody:
+        # all values are required
+        required: true
+        # content 
+        content:
+          application/json:
+            schema:
+              # takes an object containing amount to be paid
+              type: object
+              properties:
+                amount:
+                  type: number
+                  default: 0
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return details about the payment
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  amount:
+                    type: number
+                  orderId:
+                    type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+  
+  # creating a new order
+  /order/create:
+    post:
+      tags:
+        - Order
+      summary: if logged in, place a new order for a product
+      # type of data taken
+      consumes:
+        - application/json
+      # type of output produced
+      produces:
+        - application/json
+      # data passed to the req.body
+      requestBody:
+        # all values are required
+        required: true
+        # content 
+        content:
+          application/json:
+            schema:
+              # takes an object
+              type: object
+              required:
+                - shippingInfo
+                - paymentInfo
+                - taxAmount
+                - shippingAmount
+                - totalAmount
+                - orderItems
+              properties:
+                # address for shippment
+                shippingInfo:
+                  type: object
+                  properties:
+                    # address
+                    address:
+                      type: string
+                    # city 
+                    city:
+                      type: string
+                    # contact number
+                    phoneNo:
+                      type: string
+                    # state
+                    state:
+                      type: string
+                    # postal code
+                    pincode:
+                      type: string
+                    # country
+                    country:
+                      type: string
+                # order details
+                orderItems:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      # product name
+                      name:
+                        type: string
+                      # product quantity
+                      quantity:
+                        type: number
+                      # image related to product
+                      image:
+                        type: string
+                        format: binary
+                      # price of product
+                      price:
+                        type: number
+                      # product id
+                      product:
+                        type: string
+                # payment info
+                paymentInfo:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                # tax amount applied on product
+                taxAmount:
+                  type: number
+                # shipping charges on product
+                shippingAmount:
+                  type: number
+                # total amount of product
+                totalAmount:
+                  type: number
+      # response generated
+      responses:
+        200:
+          description: Success, OK
+          content:
+            application/json:
+              schema:
+                # return details about the payment
+                type: object
+                properties:
+                  success: 
+                    type: boolean
+                  order:
+                    type: object
+                    properties:
+                      # address for shippment
+                      shippingInfo:
+                        type: object
+                        properties:
+                          # address
+                          address:
+                            type: string
+                          # city 
+                          city:
+                            type: string
+                          # contact number
+                          phoneNo:
+                            type: string
+                          # state
+                          state:
+                            type: string
+                          # postal code
+                          pincode:
+                            type: string
+                          # country
+                          country:
+                            type: string
+                      # order details
+                      orderItems:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            # product name
+                            name:
+                              type: string
+                            # product quantity
+                            quantity:
+                              type: number
+                            # image related to product
+                            image:
+                              type: string
+                            # price of product
+                            price:
+                              type: number
+                            # product id
+                            product:
+                              type: string
+                              description: product id
+                      # payment info
+                      paymentInfo:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                      # tax amount applied on product
+                      taxAmount:
+                        type: number
+                      # shipping charges on product
+                      shippingAmount:
+                        type: number
+                      # total amount of product
+                      totalAmount:
+                        type: number
+                      # user who placed the order
+                      user:
+                        type: string
+        400:
+          description: Bad request
+        500:
+          description: Internal Server Error
+                

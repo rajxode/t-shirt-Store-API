@@ -15,8 +15,8 @@ const {isLoggedIn} = require('../middlewares/user');
 router.route('/stripeKey').get(isLoggedIn, paymentController.stripeKey);
 router.route('/razorpayKey').get(isLoggedIn, paymentController.razorpayKey);
 
-router.route('/stripePayment').get(isLoggedIn, paymentController.stripePayment);
-router.route('/razorpayPayment').get(isLoggedIn, paymentController.razorpayPayment);
+router.route('/stripePayment').post(isLoggedIn, paymentController.stripePayment);
+router.route('/razorpayPayment').post(isLoggedIn, paymentController.razorpayPayment);
 
 // export route
 module.exports = router;

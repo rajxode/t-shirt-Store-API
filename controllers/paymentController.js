@@ -43,23 +43,28 @@ module.exports.stripePayment = BigPromise(async(req,res,next) => {
 // capture payment using razorpay
 module.exports.razorpayPayment = BigPromise(async(req,res,next) => {
 
-    var instance = new Razorpay({ 
-        key_id: process.env.RAZORPAY_API_KEY, 
-        key_secret: process.env.RAZORPAY_SECRET 
-    })
-
-    // create a new order using razorpay instance
-    const myOrder = await instance.orders.create({
-                            // amount from req.body
-                            amount: req.body.amount,
-                            // currency
-                            currency: "INR",
-                        });
+    // creating razorpay instance for creating order
+    var instance = new Razorpay({
+        key_id: process.env.RAZORPAY_API_KEY,
+        key_secret: process.env.RAZORPAY_SECRET,
+      });
     
+    // options for creating new order
+    var options = {
+        // to be converted into paise
+        amount: req.body.amount * 100, 
+        // curreny
+        currency: "INR",
+    };
+
+    // creating new order from instance
+    const myOrder = await instance.orders.create(options);
+
+    // response
     res.status(200).json({
-        success:true,
-        amount:req.body.amount,
-        order:myOrder
-    })
+        success: true,
+        amount: req.body.amount,
+        orderId: myOrder.id,
+    });
 
 });
