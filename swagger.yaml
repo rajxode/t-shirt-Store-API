@@ -587,7 +587,7 @@ paths:
     # grouping the paths
       tags:
         - Admin
-      summary: if Admin, return a single user by his id
+      summary: if Admin, update a single user by his id
       # params
       parameters:
         - name: id
@@ -727,6 +727,8 @@ paths:
                 # product's brand
                 brand:
                   type: string
+                stock:
+                  type: number
       # response generated
       responses:
         200:
@@ -760,6 +762,8 @@ paths:
                               type: string
                       category:
                         type: string
+                      stock:
+                        type: number
                       brand:
                         type: string
                       rating:
@@ -827,6 +831,8 @@ paths:
                                 type: string
                         category:
                           type: string
+                        stock:
+                          type: number
                         brand:
                           type: string
                         rating:
@@ -898,6 +904,8 @@ paths:
                                 type: string
                         category:
                           type: string
+                        stock:
+                          type: number
                         brand:
                           type: string
                         rating:
@@ -971,6 +979,8 @@ paths:
                   default: shortSleeves
                 brand:
                   type: string
+                stock:
+                  type: number
       # response generated
       responses:
         200:
@@ -1003,6 +1013,8 @@ paths:
                               type: string
                       category:
                         type: string
+                      stock:
+                        type: number
                       brand:
                         type: string
                       rating:
@@ -1107,6 +1119,8 @@ paths:
                               type: string
                       category:
                         type: string
+                      stock:
+                        type: number
                       brand:
                         type: string
                       rating:

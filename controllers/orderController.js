@@ -119,6 +119,11 @@ module.exports.adminUpdateOrder = BigPromise( async(req,res,next) => {
     // getting order 
     const order = await Order.findById(req.params.id);
 
+    // if order doesn't found
+    if(!order){
+        return next(new CustomError('Order does not exist', 400));
+    }
+
     // if the order is already delivered return back
     if(order.orderStatus === 'delivered'){
         return next(new CustomError('Order is already delivered', 400));
