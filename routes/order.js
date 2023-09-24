@@ -13,5 +13,11 @@ const {isLoggedIn,customRole} = require('../middlewares/user');
 // define route with controller
 router.route('/create').post(isLoggedIn, orderController.createOrder);
 
+// define route with controller
+router.route('/myorder').get(isLoggedIn, orderController.getAllOrder);
+
+// define route with controller
+router.route('/:id').get(isLoggedIn, orderController.getOneOrder);
+
 // export route
 module.exports = router;
