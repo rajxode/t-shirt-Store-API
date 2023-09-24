@@ -61,6 +61,11 @@ const productSchema = new mongoose.Schema({
             message:"Please select category values ONLY from the short-sleeves, long-sleeves, sweatshirts, hoodies"
         }
     },
+    // stock of product
+    stock:{
+        type: Number,
+        required: [true, 'Please provide total stock of product'],
+    },
     // product brand name
     brand:{
         type: String,

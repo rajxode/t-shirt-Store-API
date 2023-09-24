@@ -23,6 +23,9 @@ router.route('/singleUser/:id')
 
 // for products related routes
 router.use('/product',require('./product'));
+// for products related routes
+router.use('/order',require('./order'));
+
 
 // export route
 module.exports = router;

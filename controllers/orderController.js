@@ -2,6 +2,8 @@
 // order model
 const Order = require('../models/Order');
 
+const Product = require('../models/Product');
+
 // bigPromise 
 const BigPromise = require('../middlewares/bigPromise');
 
@@ -78,6 +80,69 @@ module.exports.getAllOrder = BigPromise( async(req,res,next) => {
     res.status(201).json({
         success:true,
         orders
+    });
+
+})
+
+// get all order of logged in user
+module.exports.adminGetAllOrder = BigPromise( async(req,res,next) => {
+
+    // getting all the order
+    const orders = await Order.find();
+
+
+    // return response
+    res.status(201).json({
+        success:true,
+        orders
+    });
+
+})
+
+async function updateProductStock(productId,quantity){
+
+    const product = await Product.findById(productId);
+
+    product.stock = product.stock - quantity;
+
+    await product.save({validateBeforeSave:false});
+}
+
+
+// get all order of logged in user
+module.exports.adminUpdateOrder = BigPromise( async(req,res,next) => {
+    // getting all the order
+    const order = await Order.findById(req.params.id);
+
+    if(req.body.orderStatus === 'delivered'){
+        return next(new CustomError('Order is already delivered', 400));
+    }
+
+    order.orderStatus = req.body.orderStatus;
+
+    order.orderItems.forEach( async (prod) => {
+        await updateProductStock(prod.product , prod.quantity);
+    })
+
+    await order.save();
+
+
+    // return response
+    res.status(201).json({
+        success:true,
+        order
+    });
+
+})
+
+module.exports.adminDeleteOrder = BigPromise( async(req,res,next) => {
+    // getting all the order
+    await Order.findByIdAndDelete(req.params.id);
+
+    // return response
+    res.status(201).json({
+        success:true,
+        message:'Order deleted'
     });
 
 })
