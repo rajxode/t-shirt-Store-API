@@ -22,6 +22,8 @@ router.use('/manager',require('./manager'));
 router.use('/product',require('./product'));
 // for payment related routes
 router.use('/payment',require('./payment'));
+// for order related routes
+router.use('/order',require('./order'));
 
 
 // export the router

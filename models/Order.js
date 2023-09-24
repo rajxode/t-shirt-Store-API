@@ -44,7 +44,7 @@ const orderSchema = new mongoose.Schema({
         required:true,
     },
     // data about the product
-    orderItem:[
+    orderItems:[
         {   
             // name
             name:{
