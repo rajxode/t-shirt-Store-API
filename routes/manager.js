@@ -11,7 +11,7 @@ const managerController = require('../controllers/managerController');
 const {isLoggedIn,customRole} = require('../middlewares/user');
 
 
-// define route with controller
+// get list of all the users with role as 'user'
 router.route('/userList').get(isLoggedIn, customRole('manager'), managerController.userList);
 
 // export route

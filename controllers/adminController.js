@@ -5,19 +5,11 @@ const User = require('../models/User');
 // bigPromise for functions
 const BigPromise = require('../middlewares/bigPromise');
 
-// to create a cookie token
-const cookieGenerator = require('../utils/cookieGenerator');
-
-// for uploading files
-const fileUpload = require('express-fileupload');
-
 // for uploading files to cloudinary
 const cloudinary = require('cloudinary').v2;
 
 // for creating custom error message
 const CustomError = require('../utils/customError');
-const mailHelper = require('../utils/emailHelper');
-const crypto = require('crypto');
 
 
 // get list of all the user

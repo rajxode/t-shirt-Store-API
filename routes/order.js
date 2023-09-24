@@ -12,20 +12,22 @@ const {isLoggedIn,customRole} = require('../middlewares/user');
 
 // ================ for admin 
 
+// get list of all the order
 router.route('/getAllOrder').get(isLoggedIn, customRole('admin'), orderController.adminGetAllOrder);
+// update an order by id
 router.route('/update/:id').put(isLoggedIn, customRole('admin'), orderController.adminUpdateOrder);
+// delete an order by id
 router.route('/delete/:id').delete(isLoggedIn, customRole('admin'), orderController.adminDeleteOrder);
 
-// define route with controller
+// ================= for all logged in user
+
+// to create an order
 router.route('/create').post(isLoggedIn, orderController.createOrder);
-
-// define route with controller
+// to get list of all the orders for logged in user
 router.route('/myorder').get(isLoggedIn, orderController.getAllOrder);
-
-// define route with controller
+// to get a single order by it's id
 router.route('/:id').get(isLoggedIn, orderController.getOneOrder);
         
-
 
 // export route
 module.exports = router;

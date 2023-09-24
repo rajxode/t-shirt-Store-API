@@ -8,6 +8,7 @@ const router = express.Router();
 // controller
 const userController = require('../controllers/userController');
 
+// middle ware to check whether user is logged in or not
 const {isLoggedIn} = require('../middlewares/user');
 
 
