@@ -17,8 +17,8 @@ servers:
       #  protocols 
       protocol:
         enum:
-          - http
-        default: http
+          - https
+        default: https
 
 # for auth
 components:

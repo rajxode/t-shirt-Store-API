@@ -41,6 +41,9 @@ app.use(fileUpload({
 // logger 
 app.use(morgan('tiny'));
  
+app.get('/',(req,res) => {
+    res.send("<h1>Welcome, Please visit '/api-docs' for api documentation </h1>");
+})
 
 // routes
 app.use('/api/v1',require('./routes/home'));
