@@ -1,4 +1,5 @@
 
+
 const cookieGenerator = (user,res) => {
     // generate a new token for the user
     const token = user.getJWTToken();
