@@ -2,6 +2,11 @@
   This is a complete backend API for an online e-commerce T-shirt store. With User authentication, various Product related operations ( view, purchase, update, add , remove ). Different roles for users ( Admin, Manager and User).
   User with different roles can perform different task and manage data differently.
 
+# ScreenShots:
+  ![Capture](https://github.com/rajxode/t-shirt-Store-API/assets/120395470/5c29843f-5e0e-46d0-9e5c-0773e8def161)
+  ![Capture2](https://github.com/rajxode/t-shirt-Store-API/assets/120395470/4bb74ca5-eb4c-4881-904f-4a7aeaaa540e)
+  ![Capture3](https://github.com/rajxode/t-shirt-Store-API/assets/120395470/58800f8c-424e-438a-947c-617817596b52)
+  ![Capture4](https://github.com/rajxode/t-shirt-Store-API/assets/120395470/811d356c-b56f-4455-ae53-614e30943f69)
 # Installation:
   Follow these steps to install and run this code on your system.
   - Get the code on your system.
@@ -40,3 +45,40 @@
       These variables are related to razorpay payment gateway
       - RAZORPAY_API_KEY = your razorpay's public key
       - RAZORPAY_SECRET = your razorpay's secret key
+
+# Feature
+  ## User:
+  - Create New Account.
+  - Sign in your account and get a safe token for accessing your account.
+  - See your data.
+  - Update your password.
+  - Reset Password, incase you forgot your password.
+  - View ( one / all ) the products.
+  - Add / Delete your Review for any product.
+  - View all the Reviews for any product.
+  - Place order for any product.
+  - See your orders ( one / all ).
+
+  ## Admin:
+  - See all the users.
+  - See / Update / Delete any user by it's id.
+  - Add new Products.
+  - See list of all the products.
+  - Update / Delete any product.
+  - Get list of all the orders placed.
+  - Delete any order.
+  - ### Note : Admin can also access all the routes of User.
+
+  ## Payment:
+  - Capture payment via Stripe / Razorpay.
+  - Return public key of Stripe / Razorpay.
+
+# Tools used:
+  - Nodejs
+  - Expressjs
+  - MongoDB - Database
+  - Swagger UI - API docs
+  - Cloudinary - Image Uploading
+  - Nodemailer - Sending mail for forget password
+  - Razorpay and Stripe - Capture payment request
+  - Morgan
