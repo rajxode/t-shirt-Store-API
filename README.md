@@ -2,6 +2,9 @@
   This is a complete backend API for an online e-commerce T-shirt store. With User authentication, various Product related operations ( view, purchase, update, add , remove ). Different roles for users ( Admin, Manager and User).
   User with different roles can perform different task and manage data differently.
 
+  ## Hosted link: [t-shirt-store](https://t-shirt-store.up.railway.app/)
+  ## API-Docs : [api-docs](https://t-shirt-store.up.railway.app/api-docs/)
+
 # ScreenShots:
   ![Capture](https://github.com/rajxode/t-shirt-Store-API/assets/120395470/5c29843f-5e0e-46d0-9e5c-0773e8def161)
   ![Capture2](https://github.com/rajxode/t-shirt-Store-API/assets/120395470/4bb74ca5-eb4c-4881-904f-4a7aeaaa540e)
