@@ -6,8 +6,8 @@ info: # info about the project
 
 servers:
   # server url
-  - url: "{protocol}://localhost:1000/api/{version}" 
-    description: for local host server
+  - url: "{protocol}://t-shirt-store.up.railway.app/api/{version}" 
+    description: hosted server
     variables:
       # versions of api
       version:
